@@ -265,21 +265,7 @@ Quick steps:
 4. Connect your iPhone
 5. Click **Run** or press `Cmd + R`
 
-### Step 4: Signing and Installation
-
-#### Method A: Direct Installation with Xcode (Recommended)
-1. Select your iPhone device in Xcode
-2. Click the Run button
-3. First-time run requires trusting the developer in iPhone Settings
-
-#### Method B: Using ios-deploy
-```bash
-# Using ios-deploy (requires installation)
-brew install ios-deploy
-ios-deploy --bundle YourApp.app
-```
-
-### Step 5: Pair Your Glasses
+### Step 4: Pair Your Glasses
 
 1. Open Meta View App
 2. Pair your RayBan Meta glasses
