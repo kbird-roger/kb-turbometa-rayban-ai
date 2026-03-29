@@ -63,6 +63,7 @@ class StreamSessionViewModel: ObservableObject {
   private let wearables: WearablesInterface
   private let deviceSelector: AutoDeviceSelector
   private var deviceMonitorTask: Task<Void, Never>?
+  private var isProcessingFrame = false
 
   init(wearables: WearablesInterface) {
     self.wearables = wearables
@@ -107,10 +108,12 @@ class StreamSessionViewModel: ObservableObject {
       }
     }
 
-    // Subscribe to video frames
+    // Subscribe to video frames (skip if previous frame still processing)
     videoFrameListenerToken = streamSession.videoFramePublisher.listen { [weak self] videoFrame in
       Task { @MainActor [weak self] in
-        guard let self else { return }
+        guard let self, !self.isProcessingFrame else { return }
+        self.isProcessingFrame = true
+        defer { self.isProcessingFrame = false }
 
         if let image = videoFrame.makeUIImage() {
           self.currentVideoFrame = image
@@ -273,10 +276,12 @@ class StreamSessionViewModel: ObservableObject {
       return "The operation timed out. Please try again."
     case .videoStreamingError:
       return "Video streaming failed. Please try again."
-    case .audioStreamingError:
-      return "Audio streaming failed. Please try again."
     case .permissionDenied:
       return "Camera permission denied. Please grant permission in Settings."
+    case .hingesClosed:
+      return "Glasses hinges are closed. Please open them to continue."
+    case .thermalCritical:
+      return "Device temperature is too high. Streaming paused."
     @unknown default:
       return "An unknown streaming error occurred."
     }

@@ -23,6 +23,7 @@ struct SettingsView: View {
     @State private var showQuickVisionSettings = false
     @State private var showLiveAISettings = false
     @State private var showLiveTranslateSettings = false
+    @State private var showOpenClawSettings = false
     @ObservedObject var quickVisionModeManager = QuickVisionModeManager.shared
     @ObservedObject var liveAIModeManager = LiveAIModeManager.shared
     @State private var selectedModel = "qwen3-omni-flash-realtime"
@@ -303,10 +304,38 @@ struct SettingsView: View {
                     Text("settings.liveai".localized)
                 }
 
+                // OpenClaw
+                Section {
+                    Button {
+                        showOpenClawSettings = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "link.circle.fill")
+                                .foregroundColor(.purple)
+                            Text("OpenClaw")
+                                .foregroundColor(AppColors.textPrimary)
+                            Spacer()
+                            HStack(spacing: 4) {
+                                Circle()
+                                    .fill(openClawStatusColor)
+                                    .frame(width: 8, height: 8)
+                                Text(openClawStatusText)
+                                    .font(AppTypography.caption)
+                                    .foregroundColor(AppColors.textSecondary)
+                            }
+                            Image(systemName: "chevron.right")
+                                .font(AppTypography.caption)
+                                .foregroundColor(AppColors.textTertiary)
+                        }
+                    }
+                } header: {
+                    Text("settings.integrations".localized)
+                }
+
                 // 关于
                 Section {
-                    InfoRow(title: "settings.version".localized, value: "1.5.0")
-                    InfoRow(title: "settings.sdkversion".localized, value: "0.3.0")
+                    InfoRow(title: "settings.version".localized, value: "2.0.0")
+                    InfoRow(title: "settings.sdkversion".localized, value: "0.5.0")
                 } header: {
                     Text("settings.about".localized)
                 }
@@ -366,10 +395,31 @@ struct SettingsView: View {
             .sheet(isPresented: $showLiveTranslateSettings) {
                 LiveTranslateSettingsView(viewModel: LiveTranslateViewModel())
             }
+            .sheet(isPresented: $showOpenClawSettings) {
+                OpenClawSettingsView()
+            }
             .onAppear {
                 // 视图出现时刷新 API Key 状态
                 refreshAPIKeyStatus()
             }
+        }
+    }
+
+    private var openClawStatusColor: Color {
+        switch OpenClawNodeService.shared.connectionState {
+        case .connected: return .green
+        case .connecting: return .orange
+        case .waitingForPairing: return .yellow
+        default: return .gray
+        }
+    }
+
+    private var openClawStatusText: String {
+        switch OpenClawNodeService.shared.connectionState {
+        case .connected: return "openclaw.status.connected".localized
+        case .connecting: return "openclaw.status.connecting".localized
+        case .disconnected: return "openclaw.status.disconnected".localized
+        default: return "openclaw.status.disconnected".localized
         }
     }
 

@@ -23,31 +23,31 @@
 
 ---
 
-## 🎉 Major Update v1.5.0
+## 🎉 Major Update v2.0.0
 
 <div align="center">
 
-### 🧠 Live AI Multi-Mode + Quick Vision Multi-Mode
+### 🔗 OpenClaw Integration + Meta Ray-Ban Display Support
 
-**Museum guide, accessibility assistant, reading mode, real-time translation - one pair of glasses, endless possibilities!**
+**Voice chat, photo recognition, OpenClaw AI assistant — your glasses, connected to everything!**
 
-✅ **iOS v1.5.0** | 📱 **Android v1.5.0**
+✅ **iOS v2.0.0** | 📱 **Android v1.5.0**
 
-☕ **Enjoying this project?** [**Buy me a coffee**](https://buymeacoffee.com/turbo1123)  to support development!
+☕ **Enjoying this project?** [**Buy me a coffee**](https://buymeacoffee.com/turbo1123) to support development!
 
 </div>
 
-> ☕ **Enjoying this project?** This is a passion project maintained in my spare time. If it's been helpful to you, consider [**buying me a coffee**](https://buymeacoffee.com/turbo1123) - it really helps keep the project going!
+### 🆕 v2.0 New Features
 
-### 🆕 v1.5 New Features
-
-- 🧠 **Live AI Multi-Mode**: Museum mode, Accessibility mode, Reading mode, Translation mode, Custom prompts
-- 👁️ **Quick Vision Multi-Mode**: Health analysis, Encyclopedia mode, Reading mode, Translation mode
-- 🗣️ **Siri Shortcuts**: Voice-activate Quick Vision and Live AI
+- 🔗 **OpenClaw Integration**: Connect your glasses to [OpenClaw](https://openclaw.ai) AI assistant — snap photos & voice chat
+- 🕶️ **Meta Ray-Ban Display Support**: Added support for Meta Ray-Ban Display glasses (DAT SDK v0.5.0)
+- 🎙️ **Real-time Speech Recognition**: OpenClaw chat supports Alibaba Fun-ASR voice-to-text
+- 🛡️ **Stability Improvements**: Fixed memory leaks and thread safety issues
 
 ### 🎯 Core Features
 
-- 🎬 **RTMP Live Streaming**: Stream to any RTMP platform - YouTube, Twitch, Bilibili, Douyin, TikTok, Facebook Live, etc.
+- 🔗 **OpenClaw AI Assistant**: Connect to OpenClaw Gateway, chat with AI using glasses photos
+- 🎬 **RTMP Live Streaming**: Stream to any RTMP platform — YouTube, Twitch, Bilibili, Douyin, TikTok, Facebook Live, etc.
 - 👁️ **Quick Vision**: Siri voice activation - identify objects without unlocking your phone
 - 🤖 **Live AI**: Real-time multimodal AI conversation via glasses camera and microphone
 - 🍽️ **LeanEat**: Take a photo to get nutrition analysis and health scores
@@ -132,15 +132,43 @@ Before using TurboMeta, you **MUST** enable DAT SDK Preview Mode in Meta View Ap
 
 ### 🍎 iOS — Build from Source
 
-> ✅ Supports bilingual UI, OpenRouter, Gemini, RTMP streaming
+> ✅ Supports bilingual UI, OpenRouter, Gemini, RTMP streaming, OpenClaw integration
+>
+> ⚠️ **We do NOT provide pre-built binaries (IPA) for download.** Please build from source using Xcode.
 
-1. Clone this repository
-2. Open `CameraAccess.xcodeproj` with **Xcode 15.0+**
-3. Select your Apple ID account and Bundle Identifier in Xcode
-4. Connect your iPhone, click Run to build and install
-5. Open TurboMeta and configure your Alibaba Cloud API Key in Settings 👉 [See Configuration Guide](#api-key-config)
+#### Step 1: Register with Meta Wearables
+
+1. Go to [Meta Wearables Developer Center](https://wearables.developer.meta.com/)
+2. Sign up and log in
+3. Click **Projects** → **Create Project**
+4. Go to **App configuration** page
+5. Under **Application ID integration** → **iOS integration**, copy `MetaAppID` and `ClientToken`
+6. Open `CameraAccess/Info.plist` and fill in your values under `MWDAT`:
+
+```xml
+<key>MWDAT</key>
+<dict>
+    <key>AppLinkURLScheme</key>
+    <string>turbometa://</string>
+    <key>MetaAppID</key>
+    <string>YOUR_META_APP_ID</string>
+    <key>ClientToken</key>
+    <string>YOUR_CLIENT_TOKEN</string>
+    <key>TeamID</key>
+    <string>$(DEVELOPMENT_TEAM)</string>
+</dict>
+```
+
+#### Step 2: Build and Run
+
+1. Open `CameraAccess.xcodeproj` with **Xcode 15.0+**
+2. Select your Apple ID and Team in Signing & Capabilities
+3. Connect your iPhone, click Run
+4. Configure your Alibaba Cloud API Key in Settings 👉 [See Configuration Guide](#api-key-config)
 
 ### 📱 Android
+
+> ⚠️ Android is currently at v1.5.0 and does not yet include v2.0 features (OpenClaw, Meta Ray-Ban Display).
 
 👉 [**Download APK**](https://github.com/Turbo1123/turbometa-rayban-ai/releases)
 
@@ -221,7 +249,7 @@ This is the world's first **fully Chinese-enabled** RayBan Meta AI assistant, br
 ## 📋 Requirements
 
 ### Hardware Requirements
-- ✅ RayBan Meta Smart Glasses (Stories or latest model)
+- ✅ Ray-Ban Meta Smart Glasses or **Meta Ray-Ban Display** (newly supported)
 - ✅ iPhone (iOS 17.0+) or Android phone (8.0+)
 - ✅ Stable internet connection
 
@@ -489,6 +517,71 @@ Customize AI response style in `OmniRealtimeService.swift`:
 2. Speak clearly at moderate speed
 3. Don't obstruct the microphone
 4. Currently optimized for Chinese, other languages may be less accurate
+
+## 🔗 OpenClaw Integration
+
+TurboMeta supports connecting to [OpenClaw](https://openclaw.ai) — an open-source personal AI assistant. Through OpenClaw, you can snap photos with your glasses and have AI analyze them, or use voice-to-text to chat with AI.
+
+### Features
+
+- 📷 **Photo Capture**: One-tap to capture glasses view and send to OpenClaw AI
+- 🎙️ **Voice Transcription**: Real-time speech-to-text via Alibaba Fun-ASR, auto-sent to AI
+- ⌨️ **Text Chat**: Type messages directly to AI
+- 🔄 **Auto-connect**: Saved configuration auto-connects on launch
+
+> ⚠️ Due to Meta DAT SDK limitations, the glasses camera cannot be accessed in the background. Use the photo capture feature while the app is in the foreground.
+
+### Setup
+
+#### 1. Install and Start OpenClaw
+
+```bash
+curl -fsSL https://openclaw.ai/install.sh | bash
+openclaw gateway install
+```
+
+#### 2. Configure Gateway for LAN Access
+
+Edit `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "gateway": {
+    "bind": "lan",
+    "nodes": {
+      "allowCommands": ["camera.snap", "camera.clip", "camera.list", "device.status", "device.info"]
+    }
+  }
+}
+```
+
+Then restart: `openclaw gateway restart`
+
+#### 3. Connect from App
+
+1. Open TurboMeta → Settings → OpenClaw
+2. Enter Gateway address (e.g., `192.168.1.100`) and port (`18789`)
+3. Enter Gateway Token (found in the OpenClaw Dashboard URL)
+4. Tap Connect
+
+First connection requires device pairing approval:
+
+```bash
+openclaw devices list    # View pending devices
+openclaw devices approve # Approve pairing
+```
+
+#### 4. Remote Access (Optional)
+
+For accessing Gateway outside your LAN, use [Tailscale](https://tailscale.com/):
+
+1. Install Tailscale on both the Gateway machine and your phone
+2. Log in with the same Tailscale account on both devices
+3. In the app, use the Tailscale-assigned IP (e.g., `100.x.x.x:18789`)
+
+Tailscale creates an encrypted peer-to-peer tunnel — no public ports needed.
+
+---
 
 ## 🔒 Privacy and Security
 

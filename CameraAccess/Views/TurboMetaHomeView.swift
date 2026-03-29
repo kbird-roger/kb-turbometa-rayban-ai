@@ -18,6 +18,8 @@ struct TurboMetaHomeView: View {
     @State private var showLeanEat = false
     @State private var showQuickVision = false
     @State private var showLiveTranslate = false
+    @State private var showOpenClaw = false
+    @ObservedObject private var openClawService = OpenClawNodeService.shared
 
     var body: some View {
         NavigationView {
@@ -82,12 +84,12 @@ struct TurboMetaHomeView: View {
                                 }
 
                                 FeatureCard(
-                                    title: "home.leaneat.title".localized,
-                                    subtitle: "home.leaneat.subtitle".localized,
-                                    icon: "chart.bar.fill",
-                                    gradient: [AppColors.leanEat, AppColors.leanEat.opacity(0.7)]
+                                    title: "OpenClaw",
+                                    subtitle: openClawService.connectionState == .connected ? "home.openclaw.connected".localized : "home.openclaw.subtitle".localized,
+                                    icon: "link.circle.fill",
+                                    gradient: [Color.purple, Color.indigo]
                                 ) {
-                                    showLeanEat = true
+                                    showOpenClaw = true
                                 }
                             }
 
@@ -110,6 +112,16 @@ struct TurboMetaHomeView: View {
                                 gradient: [AppColors.liveStream, AppColors.liveStream.opacity(0.7)]
                             ) {
                                 showLiveStream = true
+                            }
+
+                            // Row 5 - LeanEat
+                            FeatureCardWide(
+                                title: "home.leaneat.title".localized,
+                                subtitle: "home.leaneat.subtitle".localized,
+                                icon: "chart.bar.fill",
+                                gradient: [AppColors.leanEat, AppColors.leanEat.opacity(0.7)]
+                            ) {
+                                showLeanEat = true
                             }
                         }
                         .padding(.horizontal, AppSpacing.lg)
@@ -136,12 +148,21 @@ struct TurboMetaHomeView: View {
             .fullScreenCover(isPresented: $showLiveTranslate) {
                 LiveTranslateView(streamViewModel: streamViewModel)
             }
+            .fullScreenCover(isPresented: $showOpenClaw) {
+                OpenClawChatView(streamViewModel: streamViewModel)
+            }
         }
         .onAppear {
             // 确保 QuickVisionManager 有 streamViewModel 引用
             quickVisionManager.setStreamViewModel(streamViewModel)
             // 确保 LiveAIManager 有 streamViewModel 引用
             liveAIManager.setStreamViewModel(streamViewModel)
+
+            // OpenClaw 自动连接（如果有保存的配置）
+            if openClawService.connectionState == .disconnected,
+               openClawService.loadGatewayToken() != nil {
+                openClawService.connect()
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: .liveAITriggered)) { _ in
             // 从快捷指令触发，自动打开 Live AI 界面

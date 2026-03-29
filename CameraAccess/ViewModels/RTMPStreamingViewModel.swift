@@ -5,6 +5,7 @@
 
 import SwiftUI
 import Combine
+import Security
 import os.log
 
 private let logger = Logger(subsystem: "com.smartview.glassai", category: "RTMPStreaming")
@@ -127,6 +128,7 @@ class RTMPStreamingViewModel: ObservableObject {
 
     deinit {
         statsTimer?.invalidate()
+        streamingService.stopStreaming()
     }
 
     // MARK: - Public Methods
@@ -286,18 +288,17 @@ class RTMPStreamingViewModel: ObservableObject {
 
     private func saveSettings() {
         UserDefaults.standard.set(rtmpUrl, forKey: "rtmp_url")
-        UserDefaults.standard.set(streamKey, forKey: "rtmp_stream_key")
         UserDefaults.standard.set(selectedPlatform.rawValue, forKey: "rtmp_platform")
         UserDefaults.standard.set(bitrate, forKey: "rtmp_bitrate")
+        // Stream key is sensitive, store in Keychain
+        saveStreamKeyToKeychain(streamKey)
     }
 
     private func loadSavedSettings() {
         if let savedUrl = UserDefaults.standard.string(forKey: "rtmp_url") {
             rtmpUrl = savedUrl
         }
-        if let savedKey = UserDefaults.standard.string(forKey: "rtmp_stream_key") {
-            streamKey = savedKey
-        }
+        streamKey = loadStreamKeyFromKeychain() ?? ""
         if let savedPlatform = UserDefaults.standard.string(forKey: "rtmp_platform"),
            let platform = StreamingPlatform(rawValue: savedPlatform) {
             selectedPlatform = platform
@@ -306,6 +307,48 @@ class RTMPStreamingViewModel: ObservableObject {
         if savedBitrate > 0 {
             bitrate = savedBitrate
         }
+        // Migrate old UserDefaults key to Keychain
+        if let oldKey = UserDefaults.standard.string(forKey: "rtmp_stream_key"), !oldKey.isEmpty {
+            saveStreamKeyToKeychain(oldKey)
+            if streamKey.isEmpty { streamKey = oldKey }
+            UserDefaults.standard.removeObject(forKey: "rtmp_stream_key")
+        }
+    }
+
+    private func saveStreamKeyToKeychain(_ key: String) {
+        let service = "com.smartview.glassai.rtmp"
+        let account = "stream_key"
+        let data = key.data(using: .utf8) ?? Data()
+
+        SecItemDelete([
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account
+        ] as CFDictionary)
+
+        guard !key.isEmpty else { return }
+        SecItemAdd([
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecValueData: data
+        ] as CFDictionary, nil)
+    }
+
+    private func loadStreamKeyFromKeychain() -> String? {
+        let service = "com.smartview.glassai.rtmp"
+        let account = "stream_key"
+        var result: AnyObject?
+
+        let status = SecItemCopyMatching([
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: service,
+            kSecAttrAccount: account,
+            kSecReturnData: true
+        ] as CFDictionary, &result)
+
+        guard status == errSecSuccess, let data = result as? Data else { return nil }
+        return String(data: data, encoding: .utf8)
     }
 }
 

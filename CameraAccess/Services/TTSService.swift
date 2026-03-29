@@ -187,7 +187,10 @@ class TTSService: NSObject, ObservableObject {
     // MARK: - Private Methods
 
     private func synthesizeAndPlay(text: String, apiKey: String) async throws {
-        var request = URLRequest(url: URL(string: baseURL)!)
+        guard let url = URL(string: baseURL) else {
+            throw TTSError.invalidResponse
+        }
+        var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -219,13 +222,14 @@ class TTSService: NSObject, ObservableObject {
             throw TTSError.apiError(statusCode: httpResponse.statusCode)
         }
 
-        // 先配置音频会话（如果还没配置）
-        configureAudioSession()
+        // 停止当前播放并重置 playerNode 队列
+        playerNode?.stop()
+        playerNode?.reset()
 
-        // 重新初始化并启动播放引擎
-        stopPlaybackEngine()
-        setupPlaybackEngine()
-        startPlaybackEngine()
+        // 确保播放引擎在运行
+        if !isPlaybackEngineRunning {
+            startPlaybackEngine()
+        }
 
         // 提前调用 play()，让 playerNode 准备好接收 buffer
         playerNode?.play()

@@ -46,6 +46,8 @@ class RTMPStreamingService: NSObject, @unchecked Sendable {
 
     // MARK: - Properties
 
+    private let lock = NSLock()
+
     private var rtmpConnection: RTMPConnection?
     private var rtmpStream: RTMPStream?
 
@@ -168,9 +170,15 @@ class RTMPStreamingService: NSObject, @unchecked Sendable {
 
     /// Feed a video frame for streaming
     func feedFrame(_ image: UIImage, timestamp: Int64) {
-        guard isStreaming, let stream = rtmpStream else { return }
+        lock.lock()
+        let streaming = isStreaming
+        let stream = rtmpStream
+        if streaming {
+            totalFrames += 1
+        }
+        lock.unlock()
 
-        totalFrames += 1
+        guard streaming, let stream else { return }
 
         // Convert UIImage to CMSampleBuffer
         guard let sampleBuffer = image.toCMSampleBuffer(timestamp: timestamp) else {

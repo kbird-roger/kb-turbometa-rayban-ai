@@ -424,3 +424,27 @@
 // Live Translate Home Card
 "home.translate.title" = "Live Translate";
 "home.translate.subtitle" = "18 Languages";
+
+// OpenClaw Integration
+"settings.integrations" = "Integrations";
+"openclaw.status.connected" = "Connected";
+"openclaw.status.connecting" = "Connecting...";
+"openclaw.status.pairing" = "Waiting for pairing";
+"openclaw.status.disconnected" = "Not connected";
+"openclaw.connect" = "Connect to Gateway";
+"openclaw.disconnect" = "Disconnect";
+"openclaw.pairing.hint" = "Run 'openclaw devices approve' in your terminal to complete pairing";
+"openclaw.gateway.help" = "Enter the address and port of the device running OpenClaw Gateway. Default is 127.0.0.1:18789";
+"openclaw.capabilities" = "Device Capabilities";
+"openclaw.capabilities.desc" = "When connected, OpenClaw AI can capture photos through the glasses, check device status, etc.";
+"home.openclaw.subtitle" = "OpenClaw";
+"home.openclaw.connected" = "Connected";
+"openclaw.chat.placeholder" = "Type a message...";
+"openclaw.chat.photoprompt" = "Please look at this photo from my glasses";
+"openclaw.chat.snap" = "Snap & Send";
+"openclaw.chat.sending" = "Sending...";
+"openclaw.chat.noframe" = "Cannot get glasses frame, please check connection";
+"openclaw.chat.noapikey" = "Please configure Alibaba API Key in Settings first";
+"openclaw.chat.sendvoice" = "Send";
+"openclaw.chat.text" = "Text";
+"openclaw.chat.listening" = "Listening...";

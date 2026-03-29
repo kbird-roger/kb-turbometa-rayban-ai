@@ -81,9 +81,7 @@ struct StreamView: View {
     }
     .onDisappear {
       Task {
-        if viewModel.streamingStatus != .stopped {
-          await viewModel.stopSession()
-        }
+        await viewModel.cleanup()
       }
     }
     // Show captured photos from DAT SDK in a preview sheet
@@ -96,11 +94,15 @@ struct StreamView: View {
           },
           onAIRecognition: {
             viewModel.showPhotoPreview = false
-            viewModel.showVisionRecognition = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+              viewModel.showVisionRecognition = true
+            }
           },
           onLeanEat: {
             viewModel.showPhotoPreview = false
-            viewModel.showLeanEat = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+              viewModel.showLeanEat = true
+            }
           }
         )
       }

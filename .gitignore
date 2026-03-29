@@ -48,3 +48,6 @@ android/local.properties
 
 # Signing tutorial images
 /
+
+# OpenClaw reference (not part of this project)
+openclaw-ref/

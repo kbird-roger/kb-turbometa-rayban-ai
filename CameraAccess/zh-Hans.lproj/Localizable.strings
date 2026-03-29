@@ -424,3 +424,27 @@
 // Live Translate Home Card
 "home.translate.title" = "实时翻译";
 "home.translate.subtitle" = "18种语言互译";
+
+// OpenClaw Integration
+"settings.integrations" = "集成";
+"openclaw.status.connected" = "已连接";
+"openclaw.status.connecting" = "连接中...";
+"openclaw.status.pairing" = "等待配对";
+"openclaw.status.disconnected" = "未连接";
+"openclaw.connect" = "连接 Gateway";
+"openclaw.disconnect" = "断开连接";
+"openclaw.pairing.hint" = "请在 OpenClaw 终端执行 openclaw devices approve 完成配对";
+"openclaw.gateway.help" = "输入运行 OpenClaw Gateway 的设备地址和端口。本机默认为 127.0.0.1:18789";
+"openclaw.capabilities" = "设备能力";
+"openclaw.capabilities.desc" = "连接后，OpenClaw AI 可以通过眼镜拍照、获取设备状态等";
+"home.openclaw.subtitle" = "OpenClaw";
+"home.openclaw.connected" = "已连接";
+"openclaw.chat.placeholder" = "输入消息...";
+"openclaw.chat.photoprompt" = "请看这张眼镜拍摄的照片";
+"openclaw.chat.snap" = "拍照发送";
+"openclaw.chat.sending" = "发送中...";
+"openclaw.chat.noframe" = "无法获取眼镜画面，请确认眼镜已连接";
+"openclaw.chat.noapikey" = "请先在设置中配置阿里云 API Key";
+"openclaw.chat.sendvoice" = "发送";
+"openclaw.chat.text" = "键盘";
+"openclaw.chat.listening" = "正在聆听...";

@@ -129,7 +129,9 @@ class QuickVisionService {
     // MARK: - Private Methods
 
     private func makeRequest(_ request: ChatCompletionRequest) async throws -> String {
-        let url = URL(string: "\(baseURL)/chat/completions")!
+        guard let url = URL(string: "\(baseURL)/chat/completions") else {
+            throw QuickVisionError.invalidResponse
+        }
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"

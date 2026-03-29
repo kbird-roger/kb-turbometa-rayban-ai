@@ -141,18 +141,14 @@ class LiveTranslateService: NSObject {
 
         print("🔌 [Translate] WebSocket 任务已启动")
         receiveMessage()
-
-        // 等待连接后发送配置
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            print("⚙️ [Translate] 准备配置会话")
-            self.configureSession()
-        }
     }
 
     func disconnect() {
         print("🔌 [Translate] 断开 WebSocket 连接")
         webSocket?.cancel(with: .goingAway, reason: nil)
         webSocket = nil
+        urlSession?.invalidateAndCancel()
+        urlSession = nil
         stopRecording()
         stopPlaybackEngine()
     }
@@ -325,7 +321,13 @@ class LiveTranslateService: NSObject {
         }
 
         var error: NSError?
+        var hasProvidedInput = false
         let inputBlock: AVAudioConverterInputBlock = { inNumPackets, outStatus in
+            if hasProvidedInput {
+                outStatus.pointee = .noDataNow
+                return nil
+            }
+            hasProvidedInput = true
             outStatus.pointee = .haveData
             return inputBuffer
         }
@@ -402,10 +404,10 @@ class LiveTranslateService: NSObject {
         }
 
         let message = URLSessionWebSocketTask.Message.string(jsonString)
-        webSocket?.send(message) { error in
+        webSocket?.send(message) { [weak self] error in
             if let error = error {
                 print("❌ [Translate] 发送事件失败: \(error.localizedDescription)")
-                self.onError?("Send error: \(error.localizedDescription)")
+                self?.onError?("Send error: \(error.localizedDescription)")
             }
         }
     }
@@ -466,7 +468,9 @@ class LiveTranslateService: NSObject {
         // 打印所有收到的事件类型
         print("📥 [Translate] 收到事件: \(type)")
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
             switch type {
             case TranslateServerEvent.sessionCreated.rawValue,
                  TranslateServerEvent.sessionUpdated.rawValue:
@@ -605,6 +609,9 @@ class LiveTranslateService: NSObject {
 extension LiveTranslateService: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         print("✅ [Translate] WebSocket 连接已建立")
+        DispatchQueue.main.async {
+            self.configureSession()
+        }
     }
 
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {

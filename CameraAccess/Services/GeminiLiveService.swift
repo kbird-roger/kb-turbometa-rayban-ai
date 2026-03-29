@@ -147,6 +147,8 @@ class GeminiLiveService: NSObject {
         print("🔌 [Gemini] 断开 WebSocket 连接")
         webSocket?.cancel(with: .goingAway, reason: nil)
         webSocket = nil
+        urlSession?.invalidateAndCancel()
+        urlSession = nil
         stopRecording()
         stopPlaybackEngine()
         isSessionConfigured = false
@@ -322,10 +324,10 @@ class GeminiLiveService: NSObject {
         }
 
         let message = URLSessionWebSocketTask.Message.string(jsonString)
-        webSocket?.send(message) { error in
+        webSocket?.send(message) { [weak self] error in
             if let error = error {
                 print("❌ [Gemini] 发送失败: \(error.localizedDescription)")
-                self.onError?("Send error: \(error.localizedDescription)")
+                self?.onError?("Send error: \(error.localizedDescription)")
             }
         }
     }
@@ -402,7 +404,9 @@ class GeminiLiveService: NSObject {
             return
         }
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
             // Handle setup complete
             if json["setupComplete"] != nil {
                 print("✅ [Gemini] 会话配置完成")

@@ -118,7 +118,9 @@ struct VisionAPIService {
     // MARK: - Private Methods
 
     private func makeRequest(_ request: ChatCompletionRequest) async throws -> ChatCompletionResponse {
-        let url = URL(string: "\(baseURL)/chat/completions")!
+        guard let url = URL(string: "\(baseURL)/chat/completions") else {
+            throw VisionAPIError.invalidImage
+        }
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"

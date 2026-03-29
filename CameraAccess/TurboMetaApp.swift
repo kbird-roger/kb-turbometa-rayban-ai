@@ -35,10 +35,9 @@ struct TurboMetaApp: App {
   init() {
     do {
       try Wearables.configure()
+      print("✅ [TurboMeta] Wearables SDK configured successfully")
     } catch {
-      #if DEBUG
-      NSLog("[TurboMeta] Failed to configure Wearables SDK: \(error)")
-      #endif
+      print("❌ [TurboMeta] Wearables.configure() failed: \(error) | \(error.localizedDescription)")
     }
     let wearables = Wearables.shared
     self.wearables = wearables

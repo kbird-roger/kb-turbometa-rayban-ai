@@ -87,6 +87,13 @@
 		LT0003000300030003 /* LiveTranslateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = LT1003000300030003 /* LiveTranslateViewModel.swift */; };
 		LT0004000400040004 /* LiveTranslateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = LT1004000400040004 /* LiveTranslateView.swift */; };
 		LT0005000500050005 /* LiveTranslateSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = LT1005000500050005 /* LiveTranslateSettingsView.swift */; };
+		OC1001000100010001 /* OpenClawModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = OC2001000100010001 /* OpenClawModels.swift */; };
+		OC1002000200020002 /* OpenClawNodeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = OC2002000200020002 /* OpenClawNodeService.swift */; };
+		OC1003000300030003 /* OpenClawCommandRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OC2003000300030003 /* OpenClawCommandRouter.swift */; };
+		OC1004000400040004 /* OpenClawSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OC2004000400040004 /* OpenClawSettingsView.swift */; };
+		OC1005000500050005 /* OpenClawDeviceIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = OC2005000500050005 /* OpenClawDeviceIdentity.swift */; };
+		OC1006000600060006 /* OpenClawChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OC2006000600060006 /* OpenClawChatView.swift */; };
+		OC1007000700070007 /* OpenClawASRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = OC2007000700070007 /* OpenClawASRService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +199,13 @@
 		LT1003000300030003 /* LiveTranslateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTranslateViewModel.swift; sourceTree = "<group>"; };
 		LT1004000400040004 /* LiveTranslateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTranslateView.swift; sourceTree = "<group>"; };
 		LT1005000500050005 /* LiveTranslateSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTranslateSettingsView.swift; sourceTree = "<group>"; };
+		OC2001000100010001 /* OpenClawModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawModels.swift; sourceTree = "<group>"; };
+		OC2002000200020002 /* OpenClawNodeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawNodeService.swift; sourceTree = "<group>"; };
+		OC2003000300030003 /* OpenClawCommandRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawCommandRouter.swift; sourceTree = "<group>"; };
+		OC2004000400040004 /* OpenClawSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawSettingsView.swift; sourceTree = "<group>"; };
+		OC2005000500050005 /* OpenClawDeviceIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawDeviceIdentity.swift; sourceTree = "<group>"; };
+		OC2006000600060006 /* OpenClawChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawChatView.swift; sourceTree = "<group>"; };
+		OC2007000700070007 /* OpenClawASRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenClawASRService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -258,6 +272,7 @@
 		4BA57A922EF8227E002EC214 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				OC3000000000000000 /* OpenClaw */,
 				4B69CCC62F050D5D00D1D025 /* RTMPStreamingService.swift */,
 				4BA57A8D2EF8227E002EC214 /* ConversationStorage.swift */,
 				4BA57A8E2EF8227E002EC214 /* LeanEatService.swift */,
@@ -369,6 +384,8 @@
 				330AF93394A09D97C504F568 /* QuickVisionSettingsView.swift */,
 				LT1004000400040004 /* LiveTranslateView.swift */,
 				LT1005000500050005 /* LiveTranslateSettingsView.swift */,
+				OC2004000400040004 /* OpenClawSettingsView.swift */,
+				OC2006000600060006 /* OpenClawChatView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -426,6 +443,18 @@
 				1F487DDEA091C1D0291D50B1 /* Managers */,
 			);
 			path = CameraAccess;
+			sourceTree = "<group>";
+		};
+		OC3000000000000000 /* OpenClaw */ = {
+			isa = PBXGroup;
+			children = (
+				OC2001000100010001 /* OpenClawModels.swift */,
+				OC2002000200020002 /* OpenClawNodeService.swift */,
+				OC2003000300030003 /* OpenClawCommandRouter.swift */,
+				OC2005000500050005 /* OpenClawDeviceIdentity.swift */,
+				OC2007000700070007 /* OpenClawASRService.swift */,
+			);
+			path = OpenClaw;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -608,6 +637,13 @@
 				LT0003000300030003 /* LiveTranslateViewModel.swift in Sources */,
 				LT0004000400040004 /* LiveTranslateView.swift in Sources */,
 				LT0005000500050005 /* LiveTranslateSettingsView.swift in Sources */,
+				OC1001000100010001 /* OpenClawModels.swift in Sources */,
+				OC1002000200020002 /* OpenClawNodeService.swift in Sources */,
+				OC1003000300030003 /* OpenClawCommandRouter.swift in Sources */,
+				OC1004000400040004 /* OpenClawSettingsView.swift in Sources */,
+				OC1005000500050005 /* OpenClawDeviceIdentity.swift in Sources */,
+				OC1006000600060006 /* OpenClawChatView.swift in Sources */,
+				OC1007000700070007 /* OpenClawASRService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,11 +691,11 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CameraAccess/TurboMeta.entitlements;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 4CXJZWV2GC;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = CameraAccess/Info.plist;
@@ -670,7 +706,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.4.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.smartview.glassai.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.glassai.app1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -689,7 +725,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 2X7K2P6UKK;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CameraAccess/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = " TurboMeta";
@@ -729,7 +765,6 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraAccess.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CameraAccess";
@@ -757,7 +792,6 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraAccess.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CameraAccess";
@@ -822,6 +856,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
 			};
 			name = Debug;
 		};
@@ -876,6 +911,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -915,10 +951,10 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		4B69CCC82F050E0000D1D025 /* XCRemoteSwiftPackageReference "HaishinKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/shogo4405/HaishinKit.swift";
+			repositoryURL = "https://github.com/Turbo1123/HaishinKit.swift";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				branch = "fix-concurrency";
+				kind = branch;
 			};
 		};
 		95F7F3332DEF0D91006D1C1A /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */ = {

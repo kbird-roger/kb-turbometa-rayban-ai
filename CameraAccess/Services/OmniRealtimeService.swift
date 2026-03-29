@@ -167,18 +167,14 @@ class OmniRealtimeService: NSObject {
 
         print("🔌 [Omni] WebSocket 任务已启动")
         receiveMessage()
-
-        // Wait a bit then send session configuration
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            print("⚙️ [Omni] 准备配置会话")
-            self.configureSession()
-        }
     }
 
     func disconnect() {
         print("🔌 [Omni] 断开 WebSocket 连接")
         webSocket?.cancel(with: .goingAway, reason: nil)
         webSocket = nil
+        urlSession?.invalidateAndCancel()
+        urlSession = nil
         stopRecording()
         stopPlaybackEngine()
     }
@@ -312,10 +308,10 @@ class OmniRealtimeService: NSObject {
         }
 
         let message = URLSessionWebSocketTask.Message.string(jsonString)
-        webSocket?.send(message) { error in
+        webSocket?.send(message) { [weak self] error in
             if let error = error {
                 print("❌ [Omni] 发送事件失败: \(error.localizedDescription)")
-                self.onError?("Send error: \(error.localizedDescription)")
+                self?.onError?("Send error: \(error.localizedDescription)")
             }
         }
     }
@@ -390,7 +386,9 @@ class OmniRealtimeService: NSObject {
             return
         }
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
             switch type {
             case OmniServerEvent.sessionCreated.rawValue,
                  OmniServerEvent.sessionUpdated.rawValue:
@@ -567,6 +565,9 @@ class OmniRealtimeService: NSObject {
 extension OmniRealtimeService: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         print("✅ [Omni] WebSocket 连接已建立, protocol: \(`protocol` ?? "none")")
+        DispatchQueue.main.async {
+            self.configureSession()
+        }
     }
 
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {

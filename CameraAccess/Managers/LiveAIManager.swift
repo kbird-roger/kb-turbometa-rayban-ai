@@ -100,13 +100,11 @@ class LiveAIManager: ObservableObject {
                 await streamViewModel.handleStartStreaming()
 
                 // 等待流进入 streaming 状态（最多 5 秒）
-                var streamWait = 0
-                while streamViewModel.streamingStatus != .streaming && streamWait < 50 {
-                    try await Task.sleep(nanoseconds: 100_000_000) // 0.1秒
-                    streamWait += 1
+                let streamReady = await waitForCondition(timeout: 5.0) {
+                    streamViewModel.streamingStatus == .streaming
                 }
 
-                if streamViewModel.streamingStatus != .streaming {
+                if !streamReady {
                     print("❌ [LiveAIManager] Failed to start streaming")
                     throw LiveAIError.streamNotReady
                 }
@@ -123,13 +121,11 @@ class LiveAIManager: ObservableObject {
             connectService()
 
             // 等待连接成功（最多 10 秒）
-            var connectWait = 0
-            while !isConnected && connectWait < 100 {
-                try await Task.sleep(nanoseconds: 100_000_000) // 0.1秒
-                connectWait += 1
+            let connected = await waitForCondition(timeout: 10.0) {
+                self.isConnected
             }
 
-            if !isConnected {
+            if !connected {
                 print("❌ [LiveAIManager] Failed to connect to AI service")
                 throw LiveAIError.connectionFailed
             }
@@ -415,6 +411,17 @@ class LiveAIManager: ObservableObject {
 
         ConversationStorage.shared.saveConversation(record)
         print("💾 [LiveAIManager] 对话已保存: \(conversationHistory.count) 条消息")
+    }
+
+    /// 等待条件满足或超时
+    private func waitForCondition(timeout: TimeInterval, condition: @escaping () -> Bool) async -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while !condition() {
+            if Date() >= deadline { return false }
+            try? await Task.sleep(nanoseconds: 100_000_000)
+            if Task.isCancelled { return false }
+        }
+        return true
     }
 
     /// 手动触发停止（从 UI 调用）
