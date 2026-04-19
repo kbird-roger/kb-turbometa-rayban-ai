@@ -1,0 +1,41 @@
+name: Build TurboMeta IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure SPM Authentication
+        run: |
+          echo "machine github.com login username password ${{ secrets.GH_PAT }}" > ~/.netrc
+
+      - name: Build unsigned app
+        run: |
+          xcodebuild build \
+            -project "samples/CameraAccess/CameraAccess.xcodeproj" \
+            -scheme "CameraAccess" \
+            -configuration Release \
+            -arch arm64 \
+            -sdk iphoneos \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CONFIGURATION_BUILD_DIR="${{ github.workspace }}/build"
+
+      - name: Package into IPA
+        run: |
+          mkdir -p Payload
+          mv build/CameraAccess.app Payload/
+          zip -r TurboMeta.ipa Payload
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TurboMeta-IPA
+          path: TurboMeta.ipa
