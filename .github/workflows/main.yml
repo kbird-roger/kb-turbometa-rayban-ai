@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-15  # 使用最新的系统环境
 
     steps:
       - name: Checkout repository
@@ -17,6 +17,7 @@ jobs:
 
       - name: Build unsigned app
         run: |
+          # 针对 TurboMeta 的路径进行编译
           xcodebuild build \
             -project "samples/CameraAccess/CameraAccess.xcodeproj" \
             -scheme "CameraAccess" \
@@ -37,5 +38,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TurboMeta-IPA
+          name: TurboMeta-Final-IPA
           path: TurboMeta.ipa
